@@ -55,7 +55,7 @@
 
 <script defer>
 document.addEventListener('DOMContentLoaded', function() {
-    const sheetId = "1EJrCfIZjSkPIpVwhObu6jLH91uJXMdlgMTVevvH7k14";
+    const sheetId = "1AKDQyiX92ZeBgrzhyegsNP-33GomyLPVyMzoleEKuR0";
     const apiKey = "AIzaSyDJYjWpouuinMF42C3mJ-j5K7cVe0xJaeM";
     let rawData = [];
     let countChart, rateChart, countryChart, weekChart;
@@ -117,38 +117,96 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function drawCountryChart(rows) {
-        if (countryChart) countryChart.destroy();
-        const labels = rows.map(r => r[0]);
-        const bounce = rows.map(r => parseFloat(r[3]));
-        const avg = rows.map(r => parseFloat(r[4]));
-        countryChart = new Chart(document.getElementById('countryChart').getContext('2d'), {
-            type: 'bar',
-            data: { labels, datasets: [
-                { label: 'Bounce Rate', data: bounce, backgroundColor: '#f1c40f', yAxisID: 'y', datalabels: { align: 'end', anchor: 'end', color: '#000', font: { weight: 'bold' }, formatter: v => (v*100).toFixed(2)+'%' } },
-                { label: 'Average Bounce rate', data: avg, type: 'line', borderColor: '#3498db', borderDash: [5,5], yAxisID: 'y', datalabels: { display: false } }
-            ] },
-            options: { plugins: { title: { display: true, text: '📍 Country wise Bounce Ratio' } }, scales: { y: { beginAtZero: true } } },
-            plugins: [ChartDataLabels]
-        });
-    }
+    if (countryChart) countryChart.destroy();
+    const labels = rows.map(r => r[0]);
+    const bounce = rows.map(r => parseFloat(r[3]));
+    const avg = rows.map(r => parseFloat(r[4]));
+    countryChart = new Chart(document.getElementById('countryChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: 'Bounce Rate',
+                    data: bounce,
+                    backgroundColor: '#f1c40f',
+                    yAxisID: 'y',
+                    datalabels: {
+                        align: 'end',
+                        anchor: 'end',
+                        color: '#000',
+                        font: { weight: 'bold' },
+                        formatter: v => v.toFixed(2) + '%' // removed *100
+                    }
+                },
+                {
+                    label: 'Average Bounce rate',
+                    data: avg,
+                    type: 'line',
+                    borderColor: '#3498db',
+                    borderDash: [5, 5],
+                    yAxisID: 'y',
+                    datalabels: { display: false }
+                }
+            ]
+        },
+        options: {
+            plugins: {
+                title: { display: true, text: '📍 Country wise Bounce Ratio' }
+            },
+            scales: { y: { beginAtZero: true } }
+        },
+        plugins: [ChartDataLabels]
+    });
+}
+
 
     function drawWeekChart(rows) {
-        if (weekChart) weekChart.destroy();
-        const order = ["WE 2025-06-02","WE 2025-06-09","WE 2025-06-16","WE 2025-06-30","WE 2025-06-23","WE 2025-07-07"];
-        rows.sort((a,b)=> order.indexOf(a[0]) - order.indexOf(b[0]));
-        const labels = rows.map(r => r[0]);
-        const bounce = rows.map(r => parseFloat(r[3]));
-        const avg = rows.map(r => parseFloat(r[4]));
-        weekChart = new Chart(document.getElementById('weekChart').getContext('2d'), {
-            type: 'bar',
-            data: { labels, datasets: [
-                { label: 'Bounce Rate', data: bounce, backgroundColor: '#1abc9c', yAxisID: 'y', datalabels: { align: 'end', anchor: 'end', color: '#000', font: { weight: 'bold' }, formatter: v => (v*100).toFixed(2)+'%' } },
-                { label: 'Average Bounce rate', data: avg, type: 'line', borderColor: '#2980b9', borderDash: [5,5], yAxisID: 'y', datalabels: { display: false } }
-            ] },
-            options: { plugins: { title: { display: true, text: '📅 Week wise Bounce Ratio' } }, scales: { y: { beginAtZero: true } } },
-            plugins: [ChartDataLabels]
-        });
-    }
+    if (weekChart) weekChart.destroy();
+    const order = ["WE 2025-06-02","WE 2025-06-09","WE 2025-06-16","WE 2025-06-30","WE 2025-06-23","WE 2025-07-07"];
+    rows.sort((a,b)=> order.indexOf(a[0]) - order.indexOf(b[0]));
+    const labels = rows.map(r => r[0]);
+    const bounce = rows.map(r => parseFloat(r[3]));
+    const avg = rows.map(r => parseFloat(r[4]));
+    weekChart = new Chart(document.getElementById('weekChart').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: 'Bounce Rate',
+                    data: bounce,
+                    backgroundColor: '#1abc9c',
+                    yAxisID: 'y',
+                    datalabels: {
+                        align: 'end',
+                        anchor: 'end',
+                        color: '#000',
+                        font: { weight: 'bold' },
+                        formatter: v => v.toFixed(2) + '%' // fixed here
+                    }
+                },
+                {
+                    label: 'Average Bounce rate',
+                    data: avg,
+                    type: 'line',
+                    borderColor: '#2980b9',
+                    borderDash: [5,5],
+                    yAxisID: 'y',
+                    datalabels: { display: false }
+                }
+            ]
+        },
+        options: {
+            plugins: {
+                title: { display: true, text: '📅 Week wise Bounce Ratio' }
+            },
+            scales: { y: { beginAtZero: true } }
+        },
+        plugins: [ChartDataLabels]
+    });
+}
+
 
     function applyFilters() {
         const sDate = new Date(document.getElementById('startDate').value);
